@@ -17,7 +17,6 @@ Will also talk about other things like:
     - life in the Uk (North East)
     - IoT solutions for home.
 
-
 My service, when ready, will be also availble in here.
 
 Hope you have fun at least. 
