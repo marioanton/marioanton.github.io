@@ -7,26 +7,25 @@
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
+        <title>yet again another blog!</title>
+        <description>
+          
+          This is my first post, how exciting! ermmm… NO!. Indeed this is ther fifth time at least that i recall me starting a new blog. Hopefully this time will be for real and will not quit that quick. This blog will be a series of what i consider relevant in...
+        </description>
+        <pubDate>Sat, 22 Jun 2019 00:00:00 -0700</pubDate>
+        <link>http://localhost:4000/yet-again-another-blog/</link>
+        <guid isPermaLink="true">http://localhost:4000/yet-again-another-blog/</guid>
+      </item>
+    
+      <item>
         <title>Test markdown</title>
         <description>
           Each post also has a subtitle - 
           You can write regular markdown here and Jekyll will automatically convert it to a nice webpage. I strongly encourage you to take 5 minutes to learn how to write in markdown - it’ll teach you how to transform regular text into bold/italics/headings/tables/etc. Here is some bold text Here is a...
         </description>
         <pubDate>Sat, 28 Feb 2015 00:00:00 -0800</pubDate>
-        <link>http://localhost:4000/2015-02-28-test-markdown/</link>
-        <guid isPermaLink="true">http://localhost:4000/2015-02-28-test-markdown/</guid>
-      </item>
-    
-      <item>
-        <title>First post!</title>
-        <description>
-          
-          This is my first post, how exciting!
-
-        </description>
-        <pubDate>Sun, 04 Jan 2015 00:00:00 -0800</pubDate>
-        <link>http://localhost:4000/2015-01-04-first-post/</link>
-        <guid isPermaLink="true">http://localhost:4000/2015-01-04-first-post/</guid>
+        <link>http://localhost:4000/test-markdown/</link>
+        <guid isPermaLink="true">http://localhost:4000/test-markdown/</guid>
       </item>
     
   </channel>
