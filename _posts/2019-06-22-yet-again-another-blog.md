@@ -2,6 +2,7 @@
 layout: post
 title: yet again another blog!
 image: /img/avatar-icon.png
+tags: [terraform,docker,k8s,prometheus,consul,puppet,azure]
 ---
 
 This is my first post, how exciting! ermmm... **NO!**. Indeed this is ther fifth time at least that i recall me starting a new blog.
