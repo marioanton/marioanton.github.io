@@ -7,6 +7,17 @@
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
+        <title>redis &amp; sentinel thoughts after some doc reading</title>
+        <description>
+          
+          Recently i had to start reading some sentinel documentation due to some migrations being conducted at my work place. I never had the chance to do it and always relied on the ‘documentation’ existing in config files and what i read in company communication channels. That is always wrong but...
+        </description>
+        <pubDate>Tue, 09 Jul 2019 00:00:00 -0700</pubDate>
+        <link>http://localhost:4000/redis-sentinel-thoughts/</link>
+        <guid isPermaLink="true">http://localhost:4000/redis-sentinel-thoughts/</guid>
+      </item>
+    
+      <item>
         <title>yet again another blog!</title>
         <description>
           
@@ -15,17 +26,6 @@
         <pubDate>Sat, 22 Jun 2019 00:00:00 -0700</pubDate>
         <link>http://localhost:4000/yet-again-another-blog/</link>
         <guid isPermaLink="true">http://localhost:4000/yet-again-another-blog/</guid>
-      </item>
-    
-      <item>
-        <title>Test markdown</title>
-        <description>
-          Each post also has a subtitle - 
-          You can write regular markdown here and Jekyll will automatically convert it to a nice webpage. I strongly encourage you to take 5 minutes to learn how to write in markdown - it’ll teach you how to transform regular text into bold/italics/headings/tables/etc. Here is some bold text Here is a...
-        </description>
-        <pubDate>Sat, 28 Feb 2015 00:00:00 -0800</pubDate>
-        <link>http://localhost:4000/test-markdown/</link>
-        <guid isPermaLink="true">http://localhost:4000/test-markdown/</guid>
       </item>
     
   </channel>
