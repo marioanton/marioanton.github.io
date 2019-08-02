@@ -70,9 +70,9 @@ Another way to set up a HA redis infra without using Sentinel itself would be us
   tcp-check expect string role:master
   tcp-check send QUIT\r\n
   tcp-check expect string +OK
-  server en1bdeqa0213200 1.1.1.1:6379 check
-  server en1bdeqa0213201 1.1.2.1:6379 check
-  server en1bdeqa0213202 1.1.3.1:6379 check
+  server host1 1.1.1.1:6379 check
+  server host2 1.1.2.1:6379 check
+  server host3 1.1.3.1:6379 check
 </pre>
 
 #### Sentinel and Redis facts
