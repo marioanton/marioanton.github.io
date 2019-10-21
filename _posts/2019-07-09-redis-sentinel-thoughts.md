@@ -111,7 +111,7 @@ redis-cli -p 26379  slaveof $redisIsntace
 > make a redis instance to be slave of given redis instance
 
 ```bash
-redis-cli -p 26379  slaveof no one
+redis-cli -p 6379  slaveof no one
 ```
 
 > make a redis instance to be master
