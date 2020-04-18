@@ -99,6 +99,7 @@ There are some errrors in this screenshot because:
 - Image was incorrect one (CODE pattern Invalid error)
 - Ethernet cable not connected / Router not switched on but in the end you can see image being uploaded correctly.
 
-
+On this way, you have achieved to get the router back to life with a DD-WRT original image for this router and with all functionality. 
+Switch it off and on to verify everything works as expected and restore your config and reset your password again :)
 
 Hope you enjoyed it and got your wrt320n back to life. :)
