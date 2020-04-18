@@ -54,7 +54,9 @@ Create a new profile and specify a command there for whenever the session with t
 screen /dev/cu.usbserial-0001 115200
 
 ![](https://github.com/marioanton/marioanton.github.io/raw/master/img/iterm.png "iterm config profile")
-> You will have to replace the device accordingly with the name of your UART usb to serial HW. Can figure this out by running: ls /dev/ | grep cu.usbserial
+> You will have to replace the device accordingly with the name of your UART usb to serial HW. Can figure this out by running: 
+
+ls /dev/ | grep cu.usbserial
 
 ```Connect ethernet cable ```
 
