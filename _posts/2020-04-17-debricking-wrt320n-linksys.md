@@ -8,7 +8,7 @@ tags: [wrt320,bricked]
 I was messing around with my home network these days of lockdown and decided to use OpenVPn integrated within DD-WRT that was flashed to my Linksys wrt320N ages ago. The openvpn it came with had to be  reasonable old so i decided to give it whirl and upgrade the firmware. 
 Firmware for upgrades can be found in here [Router Database](https://dd-wrt.com/support/router-database/?model=WRT320N_v1.0) 
 
-That is how i ended up bricking my router. I went for the image `DD-WRT Broadcom Generic - NEWD K2.6 - Mega ` instead of `DD-WRT Broadcom Generic - NEWD K2.6 - Mini`
+That is how i ended up bricking my router. I went for the image `DD-WRT Broadcom Generic - NEWD K2.6 - Mega ` instead of `dd-wrt.v24-40559_NEWD-2_K2.6_mini_wrt320n DD-WRT: Factory flash`
 
 Instead of throwing the router to the bin i decided to spend some money and time and invenstigate how this was achievable.
 
