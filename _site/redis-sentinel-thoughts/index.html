@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!-- Beautiful Jekyll | MIT license | Copyright Dean Attali 2016 -->
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+
+  <title>redis & sentinel thoughts after some doc reading</title>
+
+  <meta name="author" content="mario" />
+
+  
+
+  <link rel="alternate" type="application/rss+xml" title="manton - thoughts, experience and hobbies" href="/feed.xml" />
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-29706858-5"></script>
+    <script>
+          window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-29706858-5');
+</script>
+
+
+  
+
+  
+<!-- Google Analytics -->
+<script>
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+    ga('create', 'UA-29706858-5', 'auto');
+    ga('send', 'pageview');
+</script>
+<!-- End Google Analytics -->
+
+
+
+  
+    
+      
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css" />
+
+
+    
+  
+
+  
+    
+      <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    
+      <link rel="stylesheet" href="/css/bootstrap-social.css" />
+    
+      <link rel="stylesheet" href="/css/main.css" />
+    
+  
+
+  
+    
+      <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+    
+      <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+    
+  
+
+  
+
+  
+
+  
+
+    <!-- Facebook OpenGraph tags -->
+  
+
+  
+  <meta property="og:title" content="redis & sentinel thoughts after some doc reading" />
+  
+
+   
+  <meta property="og:description" content="Recently i had to start reading some sentinel documentation due to some migrations being conducted at my work place. I never had the chance to do it and always relied on the ‘documentation’ existing in config files and what i read in company communication channels. That is always wrong but...">
+  
+
+
+  <meta property="og:type" content="website" />
+
+  
+  <meta property="og:url" content="http://localhost:4000/redis-sentinel-thoughts/" />
+  <link rel="canonical" href="http://localhost:4000/redis-sentinel-thoughts/" />
+  
+
+  
+  <meta property="og:image" content="http://localhost:4000/img/avatar-icon.png" />
+  
+
+
+  <!-- Twitter summary cards -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@" />
+  <meta name="twitter:creator" content="@" />
+
+  
+  <meta name="twitter:title" content="redis & sentinel thoughts after some doc reading" />
+  
+
+  
+  <meta name="twitter:description" content="Recently i had to start reading some sentinel documentation due to some migrations being conducted at my work place. I never had the chance to do it and always relied on the ‘documentation’ existing in config files and what i read in company communication channels. That is always wrong but...">
+  
+
+  
+  <meta name="twitter:image" content="http://localhost:4000/img/avatar-icon.png" />
+  
+
+  
+
+  
+
+</head>
+
+
+  <body>
+
+    
+
+  
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      
+        <a class="navbar-brand" href="http://localhost:4000">manton</a>
+      
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+          <li>
+            
+
+
+
+
+
+
+<a href="/meeeeeh">About Me</a>
+
+          </li>
+        
+        
+        
+          <li class="navlinks-container">
+            <a class="navlinks-parent" href="javascript:void(0)">Resources</a>
+            <div class="navlinks-children">
+              
+                
+                  
+
+
+
+
+
+
+<a href="http://www.markdowntutorial.com/">Learn markdown</a>
+
+                
+              
+                
+                  
+
+
+
+
+
+
+<a href="https://pages.github.com/">GitHub Pages</a>
+
+                
+              
+                
+                  
+
+
+
+
+
+
+<a href="https://redis.io/documentation">Redis</a>
+
+                
+              
+            </div>
+          </li>
+        
+        
+      </ul>
+    </div>
+
+	
+	<div class="avatar-container">
+	  <div class="avatar-img-border">
+	    <a href="http://localhost:4000">
+	      <img class="avatar-img" src="/img/redis-sentinel.png" />
+		</a>
+	  </div>
+	</div>
+	
+
+  </div>
+</nav>
+
+
+    <!-- TODO this file has become a mess, refactor it -->
+
+
+
+
+
+<header class="header-section ">
+
+<div class="intro-header no-img">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-heading">
+          <h1>redis & sentinel thoughts after some doc reading</h1>
+		  
+		  
+		  
+		  <span class="post-meta">Posted on July 9, 2019</span>
+		  
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</header>
+
+
+
+
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+      
+
+      <article role="main" class="blog-post">
+        <p>Recently i had to start reading some sentinel documentation due to some migrations being conducted at my work place. I never had the chance to do it and always relied on the ‘documentation’ existing in config files and what i read in company communication channels. That is always wrong but you know, kids, daily tasks among others, stopped me to read this <a href="https://redis.io/topics/sentinel">redis-sentinel documentation</a> and hence, getting more beter knowledge/input around the features, behaviour etc..</p>
+
+<p>I’m no going to go deep. Will just make some notes of what i consider interesting facts around redis sentinel.</p>
+
+<h4 id="what-is-redis-sentinel">What is redis sentinel</h4>
+
+<blockquote>
+  <p>Redis Sentinel provides high availability for Redis.
+In practical terms this means that using Sentinel you can create a Redis deployment that resists without human intervention to certain kind of failures.</p>
+</blockquote>
+
+<h4 id="what-is-redis-sentinel-not-used-for">What is redis sentinel NOT used for</h4>
+
+<ul>
+  <li>Sentinel doesn’t manage connections initiated by clients.</li>
+</ul>
+
+<h4 id="what-is-redis-sentinel-used-for">What is redis sentinel used for</h4>
+
+<ul>
+  <li>Monitoring</li>
+  <li>Alerting</li>
+  <li>Redis Discovery</li>
+  <li>Automate failover</li>
+</ul>
+
+<p><strong>Monitoring and alerting</strong> are basics, these allow us to monitor and using the sentinel api, to grab information regarding the status of redis instances.
+<strong>Redis Discovery or also called Service Discovery</strong> let us use Redis Sentinel to discover config like what instance is master/slave and drive requests through them. This can be used by redis client with sentinel support for managing a HA scenario from app prespective.
+<strong>Automatic Failover</strong> will do what the word says, failover a master to promote a slave to become master.</p>
+
+<h4 id="achieving-ha-redis">Achieving HA Redis</h4>
+
+<p>Sentinel will cope with it by tying itself against the redis instances to be monitored. Sentinel wil be managing slave / master instances and will act upon then health on them. There are several paramenters that can be configured to control how and when instances are failed over.</p>
+
+<p>Sentinel instances monitor by themselves a set of redis instaces. The data that is retrieved by doing that monitoring is following:</p>
+
+<ul>
+  <li>Which redis instance is master/slave</li>
+  <li>Which sentinel server has got attached to.</li>
+  <li>Redis instance status, like down, up etc.</li>
+</ul>
+
+<p>All  Sentinel instances toghether (3 of them is ideal) must  achieve a quorum to take decisions, so with the data previously gathered, they communicate each other (sentinels) and vote for a decision and given that the number of sentinels  should be odd, there  should be no problem unless complex network partitions are taking place.</p>
+
+<p>There is no config in place to let the sentinel instances to comm each other but that data is gathered from redis.</p>
+
+<h4 id="achieving-ha-redis-from-app-prespective">Achieving HA Redis from app prespective</h4>
+
+<p>In order to achieve HA is not enough with setting up Sentinel along with redis to manage the cluster properly. We gonna need to think of best way to drive requests to the right instance, for example, slaves for reading and master for writes. (Bear in mind syncronization among redis instances is async so read could be returning inconsistent/no up to date information)</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">By mean of</th>
+      <th style="text-align: right">Refer to</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Using Redis Client</td>
+      <td style="text-align: right"><a href="https://redis.io/clients">Redis Clients</a></td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Using alternative Ha methods</td>
+      <td style="text-align: right"><a href="http://www.haproxy.org/">HaProxy</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>One example of <strong>redis client</strong> would be StackExchange.Redis. This will allow us have a highly available and meeting all required perfomance needs. Using multiplexer funcionalities allows us to pass a set of servers from which a master will be populated. This is not using redis Sentinel itself.</p>
+
+<p>There are other clients that support usage of <strong>Sentinel</strong> to identify the master where connection should be made against. One example i could be thinking of is to use consul service discovery to hit sentinel and return the master instance where consul ready applications could be querying to.</p>
+
+<p>Another way to set up a HA redis infra without using Sentinel itself would be using <strong>Haproxy</strong> where the there would be some rules for the haproxy backends  that would execute prechecks to deliver the  connectiong to the right server.</p>
+
+<pre>
+  option tcp-check
+  tcp-check connect
+  tcp-check send AUTH\ password\r\n
+  tcp-check expect string +OK
+  tcp-check send PING\r\n
+  tcp-check expect string +PONG
+  tcp-check send info\ replication\r\n
+  tcp-check expect string role:master
+  tcp-check send QUIT\r\n
+  tcp-check expect string +OK
+  server host1 1.1.1.1:6379 check
+  server host2 1.1.2.1:6379 check
+  server host3 1.1.3.1:6379 check
+</pre>
+
+<h4 id="sentinel-and-redis-facts">Sentinel and Redis facts</h4>
+
+<ul>
+  <li><strong>min-slaves-to-write</strong> can be used to avoid critical situations when network paritions take place.  Clients could be writting to old masters, this would prevent it.</li>
+  <li>Sentinel, Docker, or other forms of <strong>Network Address Translation</strong> or Port Mapping should be mixed with care</li>
+  <li>In Sentinel, only masters are specified to be monitored, each one with a different name. Slaves will be self-discovered</li>
+  <li>Sentinel <strong>will not forget sentinel servers</strong> in case they are decommissioned. They need to be forgotten by trigerring RESET command. Not resetting the snetinel config is useful, because Sentinels should be able to correctly reconfigure a returning slave after a network partition or a failure event. If not that should be done to have the right state of sentinel servers</li>
+  <li><strong>SDOWN</strong> sentinel status is Subjective Down and it is tied to a sentinel instance. On the contrary <strong>ODOWN</strong> means Objective Down which is status achieved by quorum of all sentinel instances.</li>
+  <li><strong>Sentinel configuration is persisted to disk</strong> so restarting the sentinel instance is safe to do so when restarting will pick up the most recent config in the files.</li>
+</ul>
+
+<h4 id="sentinel-and-redis-useful-commands">Sentinel and Redis useful commands</h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>redis-cli <span class="nt">-p</span> 26379 SENTINEL failover <span class="nv">$redisInstance</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>This will promote a slave of the current master as master and master will become slave of this one. This is achieved by internall calling redis  instance and issuing <strong>slaveof</strong> and <strong>slaveof no one</strong> commands</p>
+</blockquote>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>redis-cli <span class="nt">-p</span> 26379 SENTINEL reset <span class="nv">$redisInstance</span>/<span class="k">*</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>This will reset redis sentinel known config and will be populated again within less than 10 seconds. Safe to do and required when old sentinel instances been decommisioned</p>
+</blockquote>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>redis-cli <span class="nt">-p</span> 26379  SENTINEL masters
+</code></pre></div></div>
+
+<blockquote>
+  <p>Show a list of monitored masters and their state</p>
+</blockquote>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>redis-cli <span class="nt">-p</span> 26379  slaveof <span class="nv">$redisIsntace</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>make a redis instance to be slave of given redis instance</p>
+</blockquote>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>redis-cli <span class="nt">-p</span> 6379  slaveof no one
+</code></pre></div></div>
+
+<blockquote>
+  <p>make a redis instance to be master</p>
+</blockquote>
+
+      </article>
+
+      
+        <div class="blog-tags">
+          Tags:
+          
+          
+            <a href="/tags#redis">redis</a>
+          
+            <a href="/tags#sentinel">sentinel</a>
+          
+          
+        </div>
+      
+
+      
+        <!-- Check if any share-links are active -->
+
+
+
+
+<section id = "social-share-section">
+  <span class="sr-only">Share: </span>
+
+  
+  <!--- Share on Twitter -->
+    <a href="https://twitter.com/intent/tweet?text=redis+%26+sentinel+thoughts+after+some+doc+reading+http://localhost:4000/redis-sentinel-thoughts/"
+      class="btn btn-social-icon btn-twitter" title="Share on Twitter">
+      <span class="fa fa-fw fa-twitter" aria-hidden="true"></span>
+      <span class="sr-only">Twitter</span>
+    </a>
+  
+
+  
+  <!--- Share on Facebook -->
+    <a href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:4000/redis-sentinel-thoughts/"
+      class="btn btn-social-icon btn-facebook" title="Share on Facebook">
+      <span class="fa fa-fw fa-facebook" aria-hidden="true"></span>
+      <span class="sr-only">Facebook</span>
+    </a>
+  
+
+  
+  <!--- Share on LinkedIn -->
+    <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://localhost:4000/redis-sentinel-thoughts/"
+      class="btn btn-social-icon btn-linkedin" title="Share on LinkedIn">
+      <span class="fa fa-fw fa-linkedin" aria-hidden="true"></span>
+      <span class="sr-only">LinkedIn</span>
+    </a>
+  
+
+</section>
+
+
+
+      
+
+      <ul class="pager blog-pager">
+        
+        <li class="previous">
+          <a href="/yet-again-another-blog/" data-toggle="tooltip" data-placement="top" title="yet again another blog!">&larr; Previous Post</a>
+        </li>
+        
+        
+        <li class="next">
+          <a href="/debricking-wrt320n-linksys/" data-toggle="tooltip" data-placement="top" title="debricking router linksys wrt320n">Next Post &rarr;</a>
+        </li>
+        
+      </ul>
+
+      
+        <div class="disqus-comments">
+          
+        </div>
+          
+        <div class="staticman-comments">
+          
+
+        </div>
+        <div class="justcomments-comments">
+          
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+
+    <footer>
+  <div class="container beautiful-jekyll-footer">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links"><li><a href="/feed.xml" title="RSS"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">RSS</span>
+              </a>
+            </li><li><a href="mailto:contacto@marioanton.com" title="Email me"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">Email me</span>
+              </a>
+            </li><li><a href="https://github.com/marioanton" title="GitHub"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">GitHub</span>
+              </a>
+            </li><li><a href="https://twitter.com/merioanten" title="Twitter"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">Twitter</span>
+              </a>
+            </li><li><a href="https://linkedin.com/in/marioanton" title="LinkedIn"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">LinkedIn</span>
+              </a>
+            </li></ul>
+      <p class="copyright text-muted">
+      mario
+      &nbsp;&bull;&nbsp;
+      2020
+
+      
+      &nbsp;&bull;&nbsp;
+      <a href="http://localhost:4000">marioanton.com</a>
+      
+
+      
+      </p>
+          <!-- Please don't remove this, keep my open source work credited :) -->
+    <p class="theme-by text-muted">
+      Theme by
+      <a href="https://deanattali.com/beautiful-jekyll/">beautiful-jekyll</a>
+    </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  
+    
+
+
+
+
+
+
+  
+    <!-- doing something a bit funky here because I want to be careful not to include JQuery twice! -->
+    
+      <script>
+      	if (typeof jQuery == 'undefined') {
+          document.write('<script src="/js/jquery-1.11.2.min.js"></scr' + 'ipt>');
+      	}
+      </script>
+    
+  
+    <!-- doing something a bit funky here because I want to be careful not to include JQuery twice! -->
+    
+      <script src="/js/bootstrap.min.js"></script>
+    
+  
+    <!-- doing something a bit funky here because I want to be careful not to include JQuery twice! -->
+    
+      <script src="/js/main.js"></script>
+    
+  
+
+
+  
+  </body>
+</html>
