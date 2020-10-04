@@ -1,7 +1,7 @@
 ---
 layout: post
 title: debricking router linksys wrt320n
-image: /img/router.png
+image: /img/router.jp2
 tags: [wrt320,bricked]
 ---
 
@@ -36,7 +36,7 @@ Linksys wrt320n comes with two ways to reach serial comm.
 
 Serial interface available in the router motherboard:
 
-![serial](https://github.com/marioanton/marioanton.github.io/raw/master/img/pins.png "router serial comm pins interface")
+![serial](https://github.com/marioanton/marioanton.github.io/raw/master/img/pins.jp2 "router serial comm pins interface")
 
 You can see already the mapping of the pins for the serial interface and also can see where you can find the otehr pins in the WAN interface, where serial is possible to be done as well.
 
@@ -53,7 +53,7 @@ Create a new profile and specify a command there for whenever the session with t
 
 screen /dev/cu.usbserial-0001 115200
 
-![iterm](https://github.com/marioanton/marioanton.github.io/raw/master/img/iterm.png "iterm config profile")
+![iterm](https://github.com/marioanton/marioanton.github.io/raw/master/img/iterm.jp2 "iterm config profile")
 > You will have to replace the device accordingly with the name of your UART usb to serial HW. Can figure this out by running: 
 
 ls /dev/ \|  grep cu.usbserial
@@ -77,7 +77,7 @@ First Stage. Connecting to the router.
  4. Press CTRL-C and hold that on while you switch on your router.
 
 You should be seeing something like:
-![boot](https://github.com/marioanton/marioanton.github.io/raw/master/img/boot.png "boot")
+![boot](https://github.com/marioanton/marioanton.github.io/raw/master/img/boot.jp2 "boot")
 
 Second Stage. Erasing NVRAM
 
@@ -95,7 +95,7 @@ Third Stage. Flashing.
 
 You should be seeing some like this:
 
-![tftp](https://github.com/marioanton/marioanton.github.io/raw/master/img/tftp.png "tftp")
+![tftp](https://github.com/marioanton/marioanton.github.io/raw/master/img/tftp.jp2 "tftp")
 
 There are some errrors in this screenshot because:
 - Image was incorrect one (CODE pattern Invalid error)
