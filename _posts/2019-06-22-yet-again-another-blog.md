@@ -1,7 +1,7 @@
 ---
 layout: post
 title: yet again another blog!
-image: /img/avatar-icon.png
+image: /img/avatar-icon.jp2
 tags: [terraform,docker,k8s,prometheus,consul,puppet,azure]
 ---
 
