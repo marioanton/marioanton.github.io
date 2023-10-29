@@ -12,6 +12,7 @@ After banging my head a little bit thinking of wrapping template creation etc wh
 ### Finders keepers
 Turned to be that some bits of the receivers can be templated! (using nasty gotpl but still has a point)
 That meant that i could do, using data coming from some place? (alerts?) send the alert to a specific channel based of dynamic data, use one receiver to rule them all (or as many as you need eh)
+This would also give the users the chance to send the user to whever they want based of data, labels in this case.
 
 My issue resided mostly in **slack** so here go.
 Hence i found this in the **alertmanager** config
